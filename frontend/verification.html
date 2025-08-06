@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certification Tracking System</title>
+    <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        /* Floating Background Animation */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(0,123,255,0.1), rgba(0,0,0,0));
+            animation: rotateBackground 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotateBackground {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px;
+            max-width: 1200px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #007bff, #00d2ff);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            position: relative;
+            animation: glow 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 20px rgba(0, 123, 255, 0.8), 0 0 30px rgba(0, 123, 255, 0.4);
+            }
+            100% {
+                text-shadow: 0 0 30px rgba(0, 123, 255, 1), 0 0 40px rgba(0, 123, 255, 0.7);
+            }
+        }
+
+        /* Section Styling */
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin: 40px 0;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 123, 255, 0.3);
+            transform: translateY(10px);
+            animation: floatEffect 3s ease-in-out infinite alternate;
+            position: relative;
+        }
+
+        .section h2 {
+            color: #00d2ff;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .input-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* Input Styles */
+        .input-section input {
+            padding: 15px;
+            width: 70%;
+            margin-right: 15px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+            outline: none;
+        }
+
+        .input-section input:focus {
+            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Button Styles */
+        button {
+            padding: 15px 30px;
+            border: none;
+            background: linear-gradient(135deg, #007bff, #00d2ff);
+            color: white;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0, 123, 255, 0.5);
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #00d2ff, #007bff);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.8);
+        }
+
+        /* Camera Scan Section */
+        #cameraScan {
+            margin-top: 30px;
+            background-color: rgba(0, 123, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        #preview {
+            width: 220px;
+            height: 220px;
+            border-radius: 12px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            margin: 20px auto;
+            box-shadow: 0px 0px 15px rgba(0, 123, 255, 0.6);
+        }
+
+        #startCamera {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            color: white;
+            font-size: 1.1rem;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #startCamera:hover {
+            background-color: rgba(0, 123, 255, 0.2);
+            box-shadow: 0px 0px 10px rgba(0, 123, 255, 0.6);
+        }
+
+        /* Floating Animation */
+        @keyframes floatEffect {
+            0% {
+                transform: translateY(10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* Status Message */
+        .status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00d2ff;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Certification Tracking System</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Scan Certification Section with Camera -->
+        <section class="section" id="scanSection">
+            <h2>Scan Certification</h2>
+            <p>Scan the certification code using the camera or enter manually to verify authenticity.</p>
+
+            <!-- Manual Certification Code Input -->
+            <div class="input-section">
+                <input type="text" id="certCode" placeholder="Enter certification code">
+                <button onclick="scanCertification()">Verify Code</button>
+            </div>
+            <p id="scanResult" class="status"></p>
+
+            <!-- Camera Scan -->
+            <div id="cameraScan">
+                <h3>Camera QR Code Scan</h3>
+                <video id="preview" class="hidden"></video>
+                <div id="cameraControl">
+                    <button id="startCamera" onclick="startCamera()">Start Camera</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simulate an API call with a promise that resolves after a delay
+        function mockApiCall(responseText, delay = 2000) {
+            return new Promise(resolve => {
+                setTimeout(() => resolve(responseText), delay);
+            });
+        }
+    
+        // Function to generate a random tracking number
+        function generateTrackingNumber() {
+            // Generate a 6-digit random number as tracking number
+            return Math.floor(Math.random() * 900000 + 100000).toString();
+        }
+    
+        // Mocked verification codes for demo
+        let validCertCodes = ["123456", "789101", "112233"];
+        let generatedTrackingNumber = generateTrackingNumber(); // Generate random tracking number
+    
+        console.log("Generated Tracking Number: " + generatedTrackingNumber); // For debugging purposes
+    
+        // Function to simulate the verification of the certification code
+        function scanCertification() {
+            const certCode = document.getElementById("certCode").value;
+            const scanResult = document.getElementById("scanResult");
+    
+            if (!certCode) {
+                scanResult.textContent = "Please enter a certification code.";
+                scanResult.style.color = "red";
+                return;
+            }
+    
+            scanResult.textContent = "Verifying certification code...";
+            scanResult.style.color = "#00d2ff";
+    
+            // Check if the entered certCode matches the generated tracking number
+            if (validCertCodes.includes(certCode) && certCode === generatedTrackingNumber) {
+                // If match, return success message
+                mockApiCall("Certification code verified!").then(response => {
+                    scanResult.textContent = response;
+                    scanResult.style.color = "lightgreen";
+                });
+            } else {
+                // If no match, return failure message
+                mockApiCall("Certification code invalid!").then(response => {
+                    scanResult.textContent = response;
+                    scanResult.style.color = "red";
+                });
+            }
+        }
+    
+        // Camera QR Scan
+        let scanner;
+        function startCamera() {
+            scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+            scanner.addListener('scan', function (content) {
+                document.getElementById('scanResult').textContent = `Certification code: ${content}`;
+                stopCamera();
+            });
+    
+            Instascan.Camera.getCameras().then(function (cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                    document.getElementById("preview").classList.remove("hidden");
+                    document.getElementById("startCamera").classList.add("hidden");
+                } else {
+                    console.error('No cameras found.');
+                }
+            }).catch(function (e) {
+                console.error(e);
+            });
+        }
+    
+        function stopCamera() {
+            if (scanner) {
+                scanner.stop();
+                document.getElementById("preview").classList.add("hidden");
+                document.getElementById("startCamera").classList.remove("hidden");
+                document.getElementById("scanResult").textContent += " (Camera turned off automatically)";
+            }
+        }
+    </script>
+    
+</body>
+</html>
