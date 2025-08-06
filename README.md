@@ -2,9 +2,6 @@
 
 A web-based application to manage drug inventories efficiently in hospitals or pharmacies, featuring real-time tracking, chatbot support, and user-friendly dashboards.
 
-![GitHub repo size](https://img.shields.io/github/repo-size/manikan2848y/Drug-Inventory-Supply-Chain-Management-System?color=blue)
-![License](https://img.shields.io/github/license/manikan2848y/Drug-Inventory-Supply-Chain-Management-System)
-![Made with Node](https://img.shields.io/badge/Backend-Node.js-green)
 
 ---
 
